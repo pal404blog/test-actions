@@ -1,15 +1,13 @@
-from transformers import pipeline
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
 
-# Load the GPT-2 model and tokenizer
-generator = pipeline('text-generation', model='gpt2')
+tokenizer = GPT2Tokenizer.from_pretrained('gpt2-large')
 
-# Set the prompt text
-prompt = "Today's trending tech topic on Reddit is..."
+model = GPT2LMHeadModel.from_pretrained('gpt2-large', pad_token_id=tokenizer.eos_token_id)
+model.eval()
 
-# Generate the blog content
-generated_text = generator(prompt, max_length=1000, do_sample=True)[0]['generated_text']
+initial_text = r 'Data Science and Machine Learning'
+input_tokens= tokenizer(initial_text, return_tensors='pt').input_ids
 
-# Write the generated text to a file
-with open('generated_blog_content.txt', 'w') as f:
-    f.write(generated_text)
-
+print("Output:\n" + 100 * '-')
+content = model.generate(input_tokens, penalty_alpha=0.6, top_k=4, max_length=512)
+print("" + 100 * '-')
