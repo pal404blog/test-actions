@@ -1,67 +1,35 @@
-# To add a new cell, type '# %%'
-# To add a new markdown cell, type '# %% [markdown]'
-# %% [markdown]
-# ### Import dependencies
+import requests
+from bs4 import BeautifulSoup
+import telegram
 
-# %%
-from transformers import GPT2LMHeadModel , GPT2Tokenizer
+# Telegram bot token
+bot_token = '5581093475:AAE1heC-q62k8RK3od88-jVq45Xrikx8KY8'
 
-# %% [markdown]
-# ### Load Model
+# Telegram chat ID
+chat_id = '5247336753'
 
-# %%
-tokenizer = GPT2Tokenizer.from_pretrained('gpt2-large')
-model = GPT2LMHeadModel.from_pretrained('gpt2-large' , pad_token_id = tokenizer.eos_token_id )
+# Google job page URL
+url = "https://careers.google.com/jobs/"
 
+# Send an HTTP GET request to the URL
+response = requests.get(url)
 
-# %%
-tokenizer.decode(tokenizer.eos_token_id)
+# Parse the HTML response using Beautiful Soup
+soup = BeautifulSoup(response.content, 'html.parser')
 
-# %% [markdown]
-# ### Tokenize the text
+# Extract the links to the job postings
+job_links = []
+for job in soup.find_all('div', {'class': 'gc-card'}):
+    link = job.find('a')
+    if link:
+        job_links.append(link['href'])
 
-# %%
-sentence = "Love is"
-input_ids = tokenizer.encode(sentence , return_tensors = 'pt')
+# Create a Telegram bot instance
+bot = telegram.Bot(token=bot_token)
 
-
-# %%
-input_ids
-
-
-# %%
-tokenizer.decode(input_ids[0])
-
-
-# %%
-print(tokenizer.decode(input_ids[0][1]))
-print(tokenizer.decode(input_ids[0][2]))
-print(tokenizer.decode(input_ids[0][3]))
-print(tokenizer.decode(input_ids[0][4]))
-
-# %% [markdown]
-# ### Generate and Decode Text
-
-# %%
-output = model.generate(input_ids, max_length = 500, num_beams = 5,no_repeat_ngram_size  = 2 , early_stopping = True)
-
-
-# %%
-output[0]
-
-
-# %%
-print(tokenizer.decode(output[0] , skip_special_tokens = True))
-
-# %% [markdown]
-# ### Output Result
-
-# %%
-text = tokenizer.decode(output[0] , skip_special_tokens = True)
-
-
-# %%
-with open('blog_ai.txt','w') as f:
-    f.write(text)
-
-
+# Send the job links to the Telegram chat
+if len(job_links) > 0:
+    message = "New job postings:\n" + "\n".join(job_links)
+    bot.send_message(chat_id=chat_id, text=message)
+else:
+    bot.send_message(chat_id=chat_id, text="No new job postings.")
