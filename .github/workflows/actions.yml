@@ -1,8 +1,9 @@
 name: Run main.py and push changes
 
 on:
-  schedule:
-    - cron: '* * * * *' # Runs every two hours
+  workflow_dispatch:
+#   schedule:
+#     - cron: '* * * * *' # Runs every two hours
 
 jobs:
   run-main:
