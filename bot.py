@@ -1,12 +1,13 @@
+import os
 import requests
 from bs4 import BeautifulSoup
 import telegram
 
 # Telegram bot token
-bot_token = '5581093475:AAE1heC-q62k8RK3od88-jVq45Xrikx8KY8'
+bot_token = os.environ['BOT_TOKEN']
 
 # Telegram chat ID
-chat_id = '5247336753'
+chat_id = os.environ['CHAT_ID']
 
 # Google job page URL
 url = "https://careers.google.com/jobs/"
