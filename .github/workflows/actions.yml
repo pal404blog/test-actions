@@ -1,26 +1,53 @@
-name: Google Jobs Scraper
+name: Job Postings Scraper
 
 on:
+  schedule:
+    - cron: '0 */12 * * *'  # Run every 12 hours
   workflow_dispatch:
     
 
 jobs:
-  run-scraper:
+  log_job_postings:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+      
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.9"
-
+          python-version: '3.x'
+      
       - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Run scraper
-        run: python bot.py
-        env:
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Scrape job postings
+        run: python scrape_job_postings.py
+      
+      - name: Update README
+        run: |
+          echo '## Job Postings' > README.md
+          echo '' >> README.md
+          echo '**Oracle**' >> README.md
+          cat oracle.txt >> README.md
+          echo '' >> README.md
+          echo '**Twitter**' >> README.md
+          cat twitter.txt >> README.md
+          echo '' >> README.md
+          echo '**Google**' >> README.md
+          cat google.txt >> README.md
+          echo '' >> README.md
+          echo '**GitHub**' >> README.md
+          cat github.txt >> README.md
+          echo '' >> README.md
+          echo '**Reddit**' >> README.md
+          cat reddit.txt >> README.md
+      
+      - name: Commit changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git commit -a -m "Update job postings"
+          git push
