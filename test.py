@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.wait import WebDriverWait
 
-driver = webdriver.Firefox()
+driver = webdriver.Chrome()
 for x in range(181):
     driver.get('https://charusat.edu.in:912/UniExamResult/frmUniversityResult.aspx') # Open Quora website
 
