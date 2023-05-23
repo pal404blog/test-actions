@@ -22,4 +22,4 @@ jobs:
         pip install selenium 
 
     - name: Run Selenium script
-      run: python your_script.py
+      run: python test.py
