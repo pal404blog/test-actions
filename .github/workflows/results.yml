@@ -24,7 +24,7 @@ jobs:
         
     - name: Download Selenium drivers
       run: |
-        wget https://chromedriver.storage.googleapis.com/113.0.5672.63/chromedriver_linux64.zip
+        wget https://chromedriver.storage.googleapis.com/112.0.5615.49/chromedriver_linux64.zip
         unzip chromedriver_linux64.zip
         chmod +x chromedriver
         sudo mv chromedriver /usr/local/bin/
